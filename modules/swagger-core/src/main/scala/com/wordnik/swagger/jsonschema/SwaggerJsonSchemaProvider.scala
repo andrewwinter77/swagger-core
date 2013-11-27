@@ -31,10 +31,20 @@ class ApiModelParser(val hostClass: Class[_]) extends BaseApiParser {
   private val LOGGER = LoggerFactory.getLogger(classOf[ApiModelParser])
   var hasAccessorNoneAnnotation = false;
   documentationObject.setName(readName(hostClass))
+  documentationObject.setDescription(readDescription(hostClass))
 
   private val xmlElementTypeMethod = classOf[XmlElement].getDeclaredMethod("type")
   private val processedFields: java.util.List[String] = new java.util.ArrayList[String]()
 
+  def readDescription(hostClass: Class[_]): String = {
+    var a = hostClass.getAnnotation(classOf[ApiClass])
+    if (a != null && a.description() != null) {
+      a.description()
+    } else {
+      null
+    }
+  }
+  
   def readName(hostClass: Class[_], isSimple: Boolean = true): String = {
     val xmlRootElement = hostClass.getAnnotation(classOf[XmlRootElement])
     val xmlEnum = hostClass.getAnnotation(classOf[XmlEnum])

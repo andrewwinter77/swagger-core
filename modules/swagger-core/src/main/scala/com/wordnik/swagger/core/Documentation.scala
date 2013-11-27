@@ -320,6 +320,7 @@ class DocumentationObject extends Name {
   @BeanProperty
   var uniqueFieldName: String = _
   private var fields = new ListBuffer[DocumentationParameter]
+  private var description: String = _
 
   def getFields(): java.util.List[DocumentationParameter] = fields.size match {
     case 0 => null
@@ -329,6 +330,14 @@ class DocumentationObject extends Name {
   def setFields(ep: java.util.List[DocumentationParameter]) = {
     this.fields.clear()
     if (ep != null) ep.foreach(n => fields += n)
+  }
+
+  def setDescription(description: String) = {
+    this.description = description;
+  }
+
+  def getDescription(): String = {
+    description
   }
 
   def addField(field: DocumentationParameter) = if (fields != null) fields += field
@@ -342,6 +351,7 @@ class DocumentationObject extends Name {
   def toDocumentationSchema(): DocumentationSchema = {
     val schemaObject = new DocumentationSchema()
     schemaObject.id = this.getName
+    schemaObject.description = this.getDescription
 
     if (fields.length > 0) schemaObject.properties = new HashMap[String, DocumentationSchema]() else return null
 
